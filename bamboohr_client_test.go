@@ -1,6 +1,8 @@
 package bamboohr_client
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestListEmployee(t *testing.T) {
 	ListEmployees()
