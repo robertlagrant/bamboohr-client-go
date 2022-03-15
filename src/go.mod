@@ -1,4 +1,4 @@
-module github.com/robertlagrant/bamboohr_client
+module go get github.com/robertlagrant/bamboohr-client-go
 
 go 1.17
 
