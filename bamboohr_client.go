@@ -31,15 +31,18 @@ func ListEmployees() ([]Employee, error) {
 	return response.Employees, nil
 }
 
-func GetEmployee(id int) (map[string]interface{}, error) {
+func GetEmployee(id int) (*Employee, error) {
 	urlPrefix := urlBase + tenantName
 	getUrl := urlPrefix + "/v1/employees/" + fmt.Sprint(id) + "?fields=" + strings.Join(employeeFieldNames, ",")
-	body, err := CallJsonApiMap(getUrl, apiKey, "GET")
+	body, err := CallJsonApi(getUrl, apiKey, "GET")
 	if err != nil {
 		return nil, fmt.Errorf("Could not retrieve this employee. Reason: %s", err.Error())
 	}
 
-	return body, nil
+	var employee Employee
+	json.Unmarshal([]byte(body), &employee)
+
+	return &employee, nil
 }
 
 func GetAvailableFields() ([]string, error) {

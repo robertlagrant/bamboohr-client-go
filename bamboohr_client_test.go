@@ -12,7 +12,7 @@ func TestListEmployee(t *testing.T) {
 		t.Fail()
 	}
 
-	fmt.Printf("%#v", employees[0])
+	fmt.Printf("%#v\n", employees[0])
 }
 
 // func TestGetAvailableFields(t *testing.T) {
@@ -20,5 +20,11 @@ func TestListEmployee(t *testing.T) {
 // }
 
 func TestGetEmployee(t *testing.T) {
-	GetEmployee(0) // Employee 0 is the employee associated with the API key
+	me, err := GetEmployee(0) // Employee 0 is the employee associated with the API key
+	if err != nil {
+		t.Log("Couldn't get employee", err)
+		t.Fail()
+	}
+
+	fmt.Printf("%#v\n", me)
 }
