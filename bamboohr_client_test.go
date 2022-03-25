@@ -12,7 +12,7 @@ func TestListEmployee(t *testing.T) {
 		t.Fail()
 	}
 
-	fmt.Println(employees[0])
+	fmt.Printf("%#v", employees[0])
 }
 
 // func TestGetAvailableFields(t *testing.T) {

@@ -5,7 +5,7 @@ type EmployeeListResponse struct {
 	Employees []Employee `json:"employees"`
 }
 type Employee struct {
-	BambooId    string `json:"id"`
+	ID          string `json:"id"`
 	DisplayName string `json:"displayName"`
 	FirstName   string `json:"firstName"`
 	LastName    string `json:"lastName"`
