@@ -5,14 +5,34 @@ import (
 	"testing"
 )
 
-func TestListEmployee(t *testing.T) {
-	employees, err := ListEmployees()
+func TestEmployeeDirectory(t *testing.T) {
+	employees, err := EmployeeDirectory()
 	if err != nil {
 		t.Log("Couldn't list employees", err)
 		t.Fail()
 	}
 
 	fmt.Printf("%#v\n", employees[0])
+}
+
+func TestListMyEmployees(t *testing.T) {
+	employees, err := ListMyEmployees()
+	if err != nil {
+		t.Log("Couldn't list my employees", err)
+		t.Fail()
+	}
+
+	fmt.Printf("%#v\n", employees[0])
+}
+
+func TestListAllEmployees(t *testing.T) {
+	employees, err := ListEmployees()
+	if err != nil {
+		t.Log("Couldn't list all employees", err)
+		t.Fail()
+	}
+
+	fmt.Printf("%#v\n", employees)
 }
 
 // func TestGetAvailableFields(t *testing.T) {
