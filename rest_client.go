@@ -4,12 +4,31 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
 
+func CallJsonApi(url string, apikey string, method string) ([]byte, error) {
+	response, err := CallJsonApiInternal(url, apikey, method)
+	if err != nil {
+		return nil, fmt.Errorf("1 Got error %s", err.Error())
+	}
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, fmt.Errorf("2 Got error %s", err.Error())
+	}
+
+	defer response.Body.Close()
+	if err != nil {
+		return nil, fmt.Errorf("3 Got error %s", err.Error())
+	}
+	return body, nil
+}
+
 func CallJsonApiList(url string, apikey string, method string) ([]map[string]interface{}, error) {
-	response, err := CallJsonApi(url, apikey, method)
+	response, err := CallJsonApiInternal(url, apikey, method)
 	if err != nil {
 		return nil, fmt.Errorf("1 Got error %s", err.Error())
 	}
@@ -23,7 +42,7 @@ func CallJsonApiList(url string, apikey string, method string) ([]map[string]int
 }
 
 func CallJsonApiMap(url string, apikey string, method string) (map[string]interface{}, error) {
-	response, err := CallJsonApi(url, apikey, method)
+	response, err := CallJsonApiInternal(url, apikey, method)
 	if err != nil {
 		return nil, fmt.Errorf("3 Got error %s", err.Error())
 	}
@@ -36,7 +55,7 @@ func CallJsonApiMap(url string, apikey string, method string) (map[string]interf
 	return body, nil
 }
 
-func CallJsonApi(url string, apikey string, method string) (*http.Response, error) {
+func CallJsonApiInternal(url string, apikey string, method string) (*http.Response, error) {
 	client := &http.Client{
 		Timeout: time.Second * 10,
 	}
@@ -67,4 +86,12 @@ func decodeJsonListResponse(reader io.Reader) ([]map[string]interface{}, error) 
 	var l []map[string]interface{}
 
 	return l, json.NewDecoder(reader).Decode(&l)
+}
+
+func PrettyStruct(data interface{}) (string, error) {
+	val, err := json.MarshalIndent(data, "", "    ")
+	if err != nil {
+		return "", err
+	}
+	return string(val), nil
 }

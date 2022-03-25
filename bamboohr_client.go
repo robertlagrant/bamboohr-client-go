@@ -1,9 +1,13 @@
 package bamboohr_client
 
-import "fmt"
-import "os"
-import "strings"
-import _ "github.com/joho/godotenv/autoload"
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+	"strings"
+
+	_ "github.com/joho/godotenv/autoload"
+)
 
 var (
 	urlBase            = "https://api.bamboohr.com/api/gateway.php/"
@@ -12,15 +16,19 @@ var (
 	employeeFieldNames = []string{"id", "employmentHistoryStatus", "jobTitle", "location", "department", "flsaCode", "division", "payChangeReason", "payRate", "paySchedule", "nationality"}
 )
 
-func ListEmployees() (map[string]interface{}, error) {
+func ListEmployees() ([]Employee, error) {
 	urlPrefix := urlBase + tenantName
 	listUrl := urlPrefix + "/v1/employees/directory"
-	body, err := CallJsonApiMap(listUrl, apiKey, "GET")
+	body, err := CallJsonApi(listUrl, apiKey, "GET")
 	if err != nil {
 		return nil, fmt.Errorf("Could not retrieve employees. Reason: %s", err.Error())
 	}
 
-	return body, nil
+	var response EmployeeListResponse
+	json.Unmarshal([]byte(body), &response)
+
+	// var employees []interface{} = body["employees"].([]interface{})
+	return response.Employees, nil
 }
 
 func GetEmployee(id int) (map[string]interface{}, error) {
@@ -44,7 +52,6 @@ func GetAvailableFields() ([]string, error) {
 	var fieldNames []string
 	for _, field := range fields {
 		if str, ok := field["alias"].(string); ok {
-			// fmt.Println(str)
 			fieldNames = append(fieldNames, str)
 		} else {
 			return nil, fmt.Errorf("Could not retrieve fields. Reason: %s", err.Error())
