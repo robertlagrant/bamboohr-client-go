@@ -1,5 +1,11 @@
 package bamboohr_client
 
+type Config struct {
+	ApiKey        string
+	Tenant        string
+	IncludeSalary bool
+}
+
 type EmployeeListResponse struct {
 	Fields    []Field    `json:"fields"`
 	Employees []Employee `json:"employees"`

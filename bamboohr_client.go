@@ -3,7 +3,6 @@ package bamboohr_client
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"strings"
 
 	_ "github.com/joho/godotenv/autoload"
@@ -11,14 +10,12 @@ import (
 
 var (
 	urlBase            = "https://api.bamboohr.com/api/gateway.php/"
-	apiKey             = os.Getenv("BAMBOOHR_API_KEY")
-	tenantName         = os.Getenv("BAMBOOHR_TENANT")
 	employeeFieldNames = []string{"id", "employmentHistoryStatus", "jobTitle", "location", "department", "flsaCode", "division", "payChangeReason", "payRate", "paySchedule", "nationality"}
 )
 
-func EmployeeDirectory() ([]Employee, error) {
-	listUrl := urlBase + tenantName + "/v1/employees/directory"
-	body, err := CallJsonApi(listUrl, apiKey, "GET")
+func EmployeeDirectory(config Config) ([]Employee, error) {
+	listUrl := urlBase + config.Tenant + "/v1/employees/directory"
+	body, err := CallJsonApi(listUrl, config.ApiKey, "GET")
 	if err != nil {
 		return nil, fmt.Errorf("Could not retrieve employees. Reason: %s", err.Error())
 	}
@@ -29,10 +26,10 @@ func EmployeeDirectory() ([]Employee, error) {
 	return response.Employees, nil
 }
 
-func ListMyEmployees() ([]Employee, error) {
-	listUrl := urlBase + tenantName + "/v1/reports/custom?format=JSON&onlyCurrent=false"
+func ListMyEmployees(config Config) ([]Employee, error) {
+	listUrl := urlBase + config.Tenant + "/v1/reports/custom?format=JSON&onlyCurrent=false"
 	payload := strings.NewReader("{\"filters\":{\"lastChanged\":{\"includeNull\":\"yes\"}},\"fields\":[\"supervisorId\",\"supervisorEId\",\"firstName\",\"lastName\",\"displayName\",\"payRate\",\"employmentHistoryStatus\",\"jobTitle\",\"location\",\"department\",\"payChangeReason\",\"paySchedule\",\"nationality\",\"employeeNumber\",\"birthday\",\"hireDate\",\"status\",\"terminationDate\",\"gender\",\"originalHireDate\",\"division\",\"createdByUserId\"]}")
-	body, err := CallJsonApiWithPayload(listUrl, apiKey, "POST", payload)
+	body, err := CallJsonApiWithPayload(listUrl, config.ApiKey, "POST", payload)
 	if err != nil {
 		return nil, fmt.Errorf("Could not retrieve my employees. Reason: %s", err.Error())
 	}
@@ -43,8 +40,8 @@ func ListMyEmployees() ([]Employee, error) {
 	return response.Employees, nil
 }
 
-func ListEmployees() ([]Employee, error) {
-	myEmployees, err := ListMyEmployees()
+func ListEmployees(config Config) ([]Employee, error) {
+	myEmployees, err := ListMyEmployees(config)
 	if err != nil {
 		return nil, fmt.Errorf("Could not retrieve my employees. Reason: %s", err.Error())
 	}
@@ -53,7 +50,7 @@ func ListEmployees() ([]Employee, error) {
 		myEmployeeIds = append(myEmployeeIds, employee.ID)
 	}
 
-	employeeDirectory, err := EmployeeDirectory()
+	employeeDirectory, err := EmployeeDirectory(config)
 	if err != nil {
 		return nil, fmt.Errorf("Could not retrieve employee directory. Reason: %s", err.Error())
 	}
@@ -69,9 +66,9 @@ func ListEmployees() ([]Employee, error) {
 	return allEmployees, nil
 }
 
-func GetEmployee(id int) (*Employee, error) {
-	getUrl := urlBase + tenantName + "/v1/employees/" + fmt.Sprint(id) + "?fields=" + strings.Join(employeeFieldNames, ",")
-	body, err := CallJsonApi(getUrl, apiKey, "GET")
+func GetEmployee(config Config, id int) (*Employee, error) {
+	getUrl := urlBase + config.Tenant + "/v1/employees/" + fmt.Sprint(id) + "?fields=" + strings.Join(employeeFieldNames, ",")
+	body, err := CallJsonApi(getUrl, config.ApiKey, "GET")
 	if err != nil {
 		return nil, fmt.Errorf("Could not retrieve this employee. Reason: %s", err.Error())
 	}
