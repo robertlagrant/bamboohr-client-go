@@ -37,7 +37,15 @@ func ListMyEmployees(config Config) ([]Employee, error) {
 	var response EmployeeListResponse
 	json.Unmarshal([]byte(body), &response)
 
-	return response.Employees, nil
+	employees := response.Employees
+
+	for i, _ := range employees[:] {
+		salary, currency, _ := parsePayRate(employees[i].PayRate)
+		employees[i].PayRateParsedSalary = salary
+		employees[i].PayRateParsedCurrency = currency
+	}
+
+	return employees, nil
 }
 
 func ListEmployees(config Config) ([]Employee, error) {

@@ -11,23 +11,25 @@ type EmployeeListResponse struct {
 	Employees []Employee `json:"employees"`
 }
 type Employee struct {
-	ID               string `json:"id"`
-	Department       string `json:"department"`
-	DisplayName      string `json:"displayName"`
-	Division         string `json:"division"`
-	EmployeeNumber   string `json:"employeeNumber"`
-	FirstName        string `json:"firstName"`
-	HireDate         string `json:"hireDate"`
-	JobTitle         string `json:"jobTitle"`
-	LastName         string `json:"lastName"`
-	Location         string `json:"location"`
-	OriginalHireDate string `json:"originalHireDate"`
-	PayRate          string `json:"payRate"`
-	Status           string `json:"status"`
-	Supervisor       string `json:"supervisor"`
-	SupervisorID     string `json:"supervisorId"`
-	SupervisorEID    string `json:"supervisorEId"`
-	TerminationDate  string `json:"terminationDate"`
+	ID                    string `json:"id"`
+	Department            string `json:"department"`
+	DisplayName           string `json:"displayName"`
+	Division              string `json:"division"`
+	EmployeeNumber        string `json:"employeeNumber"`
+	FirstName             string `json:"firstName"`
+	HireDate              string `json:"hireDate"`
+	JobTitle              string `json:"jobTitle"`
+	LastName              string `json:"lastName"`
+	Location              string `json:"location"`
+	OriginalHireDate      string `json:"originalHireDate"`
+	PayRate               string `json:"payRate"`
+	PayRateParsedSalary   string `json:"payRateParsedSalary"`
+	PayRateParsedCurrency string `json:"payRateParsedCurrency"`
+	Status                string `json:"status"`
+	Supervisor            string `json:"supervisor"`
+	SupervisorID          string `json:"supervisorId"`
+	SupervisorEID         string `json:"supervisorEId"`
+	TerminationDate       string `json:"terminationDate"`
 }
 type Field struct {
 	ID         int32         `json:"id"`
